@@ -1,12 +1,14 @@
 package ticketmanagement;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class CollectionManager {
     private Vector<Ticket> collection = new Vector<>();
+    private LocalDateTime initDate = LocalDateTime.now();
 
     public String getInfo() {
-        return "Количество элементов: " + collection.size();
+        return "Тип: Vector\nДата: " + initDate + "\nРазмер: " + collection.size();
     }
 
     public String show() {
@@ -20,5 +22,31 @@ public class CollectionManager {
 
     public void add(Ticket t) {
         collection.add(t);
+    }
+
+    public boolean updateById(Long id, Ticket newTicket) {
+        for (int i = 0; i < collection.size(); i++) {
+            if (collection.get(i).getId().equals(id)) {
+                collection.set(i, newTicket);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean removeById(Long id) {
+        return collection.removeIf(t -> t.getId().equals(id));
+    }
+
+    public void clear() {
+        collection.clear();
+    }
+
+    public boolean removeAt(int index) {
+        if (index >= 0 && index < collection.size()) {
+            collection.remove(index);
+            return true;
+        }
+        return false;
     }
 }

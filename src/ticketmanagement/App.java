@@ -20,9 +20,12 @@ public class App {
     }
 
     private void processCommand(String input) {
-        switch (input) {
+        String[] parts = input.split(" ");
+        String command = parts[0];
+
+        switch (command) {
             case "help":
-                System.out.println("help, info, show, add, exit");
+                System.out.println("help, info, show, add, update, remove_by_id, clear, remove_at, exit");
                 break;
             case "info":
                 System.out.println(collectionManager.getInfo());
@@ -31,8 +34,20 @@ public class App {
                 System.out.println(collectionManager.show());
                 break;
             case "add":
-                Ticket t = inputReader.readTicket();
-                collectionManager.add(t);
+                collectionManager.add(inputReader.readTicket());
+                break;
+            case "update":
+                Long id = Long.parseLong(parts[1]);
+                collectionManager.updateById(id, inputReader.readTicket());
+                break;
+            case "remove_by_id":
+                collectionManager.removeById(Long.parseLong(parts[1]));
+                break;
+            case "clear":
+                collectionManager.clear();
+                break;
+            case "remove_at":
+                collectionManager.removeAt(Integer.parseInt(parts[1]));
                 break;
             case "exit":
                 isRunning = false;
