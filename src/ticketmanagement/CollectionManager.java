@@ -4,24 +4,36 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class CollectionManager {
-    private Vector<Ticket> collection = new Vector<>();
-    private LocalDateTime initDate = LocalDateTime.now();
+    private Vector<Ticket> collection;
+    private LocalDateTime initDate;
+    private String fileName;
+
+    public CollectionManager(String fileName) {
+        this.collection = new Vector<>();
+        this.initDate = LocalDateTime.now();
+        this.fileName = fileName;
+    }
+
+    public Vector<Ticket> getCollection() { return collection; }
+    public LocalDateTime getInitDate() { return initDate; }
 
     public String getInfo() {
-        return "Тип: Vector\nДата: " + initDate + "\nРазмер: " + collection.size();
+        return String.format("Тип коллекции: %s\nДата инициализации: %s\nКоличество элементов: %d",
+                collection.getClass().getName(), initDate, collection.size());
     }
 
     public String show() {
-        if (collection.isEmpty()) return "Пусто";
-        StringBuilder sb = new StringBuilder();
-        for (Ticket t : collection) {
-            sb.append(t).append("\n");
-        }
-        return sb.toString();
+    if (collection.isEmpty()) return "Коллекция пуста";
+    StringBuilder sb = new StringBuilder();
+    sb.append("\n");
+    for (Ticket t : collection) {
+        sb.append(t.toString());
     }
+    return sb.toString();
+}
 
-    public void add(Ticket t) {
-        collection.add(t);
+    public void add(Ticket ticket) {
+        collection.add(ticket);
     }
 
     public boolean updateById(Long id, Ticket newTicket) {
@@ -48,5 +60,57 @@ public class CollectionManager {
             return true;
         }
         return false;
+    }
+
+    public boolean addIfMax(Ticket ticket) {
+        if (collection.isEmpty()) {
+            collection.add(ticket);
+            return true;
+        }
+        
+        Ticket maxTicket = Collections.max(collection);
+        if (ticket.compareTo(maxTicket) > 0) {
+            collection.add(ticket);
+            return true;
+        }
+        return false;
+    }
+
+    public void reorder() {
+        Collections.reverse(collection);
+    }
+
+    public Ticket maxByCoordinates() {
+        if (collection.isEmpty()) return null;
+        return Collections.max(collection, (t1, t2) -> t1.compareCoordinates(t2));
+    }
+
+    public Set<Integer> getUniquePrices() {
+        Set<Integer> prices = new HashSet<>();
+        for (Ticket t : collection) {
+            prices.add(t.getPrice());
+        }
+        return prices;
+    }
+
+    public List<Integer> getPricesDescending() {
+        List<Integer> prices = new ArrayList<>();
+        for (Ticket t : collection) {
+            prices.add(t.getPrice());
+        }
+        prices.sort(Collections.reverseOrder());
+        return prices;
+    }
+
+    public void loadFromFile() throws Exception {
+        FileManager fileManager = new FileManager();
+        List<Ticket> loaded = fileManager.loadFromFile(fileName);
+        collection.clear();
+        collection.addAll(loaded);
+    }
+
+    public void saveToFile() throws Exception {
+        FileManager fileManager = new FileManager();
+        fileManager.saveToFile(fileName, collection);
     }
 }
