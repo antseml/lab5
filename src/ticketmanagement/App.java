@@ -5,6 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.*;
 
+/**
+ * Главный класс приложения.
+ * Обрабатывает пользовательский ввод и управляет командами.
+ * 
+ * @author AS
+ * @version 1.1
+ */
+
 public class App {
     private CollectionManager collectionManager;
     private InputReader inputReader;
@@ -157,7 +165,7 @@ public class App {
         System.out.println("Билет успешно добавлен! ID: " + newTicket.getId());
     }
 
-    private void executeUpdate(String[] args) {
+        private void executeUpdate(String[] args) {
         if (args.length < 1) {
             throw new IllegalArgumentException("Не указан id билета");
         }
@@ -173,17 +181,58 @@ public class App {
             return;
         }
 
-        System.out.println("\n ОБНОВЛЕНИЕ БИЛЕТА ID: " + id);
+        System.out.println("\nОБНОВЛЕНИЕ БИЛЕТА ID: " + id);
         System.out.println("Текущие данные:");
         System.out.println(existingTicket);
-        System.out.println("\nВведите новые данные:");
         
-        Ticket updatedTicket = inputReader.readTicket();
+        System.out.println("\nВыберите поле для редактирования:");
+        System.out.println("1 - Название");
+        System.out.println("2 - Координаты");
+        System.out.println("3 - Цена");
+        System.out.println("4 - Комментарий");
+        System.out.println("5 - Тип билета");
+        System.out.println("6 - Информация о человеке");
+        System.out.println("0 - Отмена");
         
-        if (collectionManager.updateById(id, updatedTicket)) {
-            System.out.println("Билет успешно обновлен!");
-        } else {
-            System.out.println("Не удалось обновить билет");
+        int choice = inputReader.readInt("Ваш выбор: ", false);
+        
+        switch (choice) {
+            case 1:
+                String newName = inputReader.readNonEmptyString("Введите новое название: ");
+                collectionManager.updateFieldById(id, "name", newName);
+                System.out.println("Название обновлено");
+                break;
+            case 2:
+                System.out.println("Введите новые координаты:");
+                Coordinates newCoords = inputReader.readCoordinates();
+                collectionManager.updateFieldById(id, "coordinates", newCoords);
+                System.out.println("Координаты обновлены");
+                break;
+            case 3:
+                int newPrice = inputReader.readInt("Введите новую цену (int > 0): ", true);
+                collectionManager.updateFieldById(id, "price", newPrice);
+                System.out.println("Цена обновлена");
+                break;
+            case 4:
+                String newComment = inputReader.readNonEmptyString("Введите новый комментарий: ");
+                collectionManager.updateFieldById(id, "comment", newComment);
+                System.out.println("Комментарий обновлен");
+                break;
+            case 5:
+                TicketType newType = inputReader.readEnum("Выберите тип билета", TicketType.class);
+                collectionManager.updateFieldById(id, "type", newType);
+                System.out.println("Тип билета обновлен");
+                break;
+            case 6:
+                Person newPerson = inputReader.readPerson();
+                collectionManager.updateFieldById(id, "person", newPerson);
+                System.out.println("Информация о человеке обновлена");
+                break;
+            case 0:
+                System.out.println("Редактирование отменено");
+                break;
+            default:
+                System.out.println("Неверный выбор");
         }
     }
 
@@ -235,7 +284,7 @@ public class App {
             return;
         }
         
-        System.out.println("\n ВЫПОЛНЕНИЕ СКРИПТА: " + scriptFileName);
+        System.out.println("\nВЫПОЛНЕНИЕ СКРИПТА: " + scriptFileName);
         
         try (Scanner fileScanner = new Scanner(scriptFile)) {
             InputReader scriptReader = new InputReader(fileScanner, false);
@@ -249,7 +298,7 @@ public class App {
                 lineNumber++;
                 String line = fileScanner.nextLine().trim();
                 
-                if (line.isEmpty() || line.startsWith("#")) {
+                if (line.isEmpty()) {
                     continue;
                 }
                 

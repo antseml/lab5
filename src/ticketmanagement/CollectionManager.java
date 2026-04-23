@@ -3,6 +3,14 @@ package ticketmanagement;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * Класс для управления коллекцией билетов.
+ * Хранит коллекцию в java.util.Vector, обеспечивает основные операции.
+ * 
+ * @author AS
+ * @version 1.1
+ */
+
 public class CollectionManager {
     private Vector<Ticket> collection;
     private LocalDateTime initDate;
@@ -36,10 +44,33 @@ public class CollectionManager {
         collection.add(ticket);
     }
 
-    public boolean updateById(Long id, Ticket newTicket) {
+        public boolean updateFieldById(Long id, String fieldName, Object value) {
         for (int i = 0; i < collection.size(); i++) {
             if (collection.get(i).getId().equals(id)) {
-                collection.set(i, newTicket);
+                Ticket ticket = collection.get(i);
+                switch (fieldName) {
+                    case "name":
+                        ticket.setName((String) value);
+                        break;
+                    case "coordinates":
+                        ticket.setCoordinates((Coordinates) value);
+                        break;
+                    case "price":
+                        ticket.setPrice((int) value);
+                        break;
+                    case "comment":
+                        ticket.setComment((String) value);
+                        break;
+                    case "type":
+                        ticket.setType((TicketType) value);
+                        break;
+                    case "person":
+                        ticket.setPerson((Person) value);
+                        break;
+                    default:
+                        return false;
+                }
+                collection.set(i, ticket);
                 return true;
             }
         }

@@ -1,5 +1,13 @@
 package ticketmanagement;
 
+/**
+ * Класс, представляющий человека.
+ * Содержит рост, цвет глаз, цвет волос и национальность.
+ * 
+ * @author AS
+ * @version 1.0
+ */
+
 public class Person {
     private float height; 
     private Color eyeColor; 

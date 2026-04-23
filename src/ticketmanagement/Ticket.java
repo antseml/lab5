@@ -3,6 +3,15 @@ package ticketmanagement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Класс, представляющий билет.
+ * Содержит информацию о билете: id, название, координаты, цену, комментарий, тип и информацию о человеке.
+ * Реализует сортировку по умолчанию (по id).
+ * 
+ * @author AS
+ * @version 1.0
+ */
+
 public class Ticket implements Comparable<Ticket> {
     private static long nextId = 1;
     
@@ -75,13 +84,13 @@ public class Ticket implements Comparable<Ticket> {
         sb.append(String.format("Тип билета:    %s\n", type));
         
         if (person != null) {
-            sb.append("👤 Информация о человеке:\n");
+            sb.append("Информация о человеке:\n");
             sb.append(String.format("Рост:         %.2f\n", person.getHeight()));
             sb.append(String.format("Цвет глаз:    %s\n", person.getEyeColor()));
             sb.append(String.format("Цвет волос:   %s\n", person.getHairColor()));
             sb.append(String.format("Национальность: %s\n", person.getNationality()));
         } else {
-            sb.append("👤 Человек:        не указан\n");
+            sb.append("Человек:        не указан\n");
         }
         
         return sb.toString();

@@ -4,6 +4,14 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * Класс для работы с файлами.
+ * Обеспечивает загрузку и сохранение коллекции в формате JSON.
+ * 
+ * @author AS
+ * @version 1.0
+ */
+
 public class FileManager {
 
     public List<Ticket> loadFromFile(String fileName) throws Exception {

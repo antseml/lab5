@@ -1,2 +1,33 @@
 [
+  {
+    "id": 1,
+    "name": "Концерт",
+    "coordinates": {
+      "x": 10.5,
+      "y": 20
+    },
+    "creationDate": "2024-01-15",
+    "price": 1000,
+    "comment": "",
+    "type": "VIP",
+    "person": {
+      "height": 180,
+      "eyeColor": "BLUE",
+      "hairColor": "BROWN",
+      "nationality": "UNITED_KINGDOM"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Кино",
+    "coordinates": {
+      "x": 5.0,
+      "y": 10
+    },
+    "creationDate": "2024-02-20",
+    "price": 500,
+    "comment": "",
+    "type": "USUAL",
+    "person": null
+  }
 ]

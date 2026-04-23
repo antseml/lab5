@@ -1,5 +1,13 @@
 package ticketmanagement;
 
+/**
+ * Класс, представляющий координаты на плоскости.
+ * Содержит координаты x (Double, не null) и y (long).
+ * 
+ * @author AS
+ * @version 1.1
+ */
+
 public class Coordinates {
     private Double x;
     private long y;
@@ -14,6 +22,10 @@ public class Coordinates {
 
     @Override
     public String toString() {
-        return "(" + x + ", " + y + ")";
+        String xStr = x.toString();
+        if (xStr.endsWith(".0")) {
+            xStr = xStr.substring(0, xStr.length() - 2);
+        }
+        return "(" + xStr + ", " + y + ")";
     }
 }
