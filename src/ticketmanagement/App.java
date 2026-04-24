@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.*;
+import java.io.IOException;
 
 /**
  * Главный класс приложения.
@@ -17,6 +18,7 @@ public class App {
     private CollectionManager collectionManager;
     private InputReader inputReader;
     private boolean isRunning = true;
+    private Set<String> activeScripts = new HashSet<>();
 
     public App(String fileName) {
         this.collectionManager = new CollectionManager(fileName);
@@ -284,7 +286,22 @@ public class App {
             return;
         }
         
+        String absolutePath;
+        try {
+            absolutePath = scriptFile.getCanonicalPath();
+        } catch (IOException e) {
+            System.out.println("Ошибка при определении пути к файлу: " + e.getMessage());
+            return;
+        }
+        
+        if (activeScripts.contains(absolutePath)) {
+            System.out.println("Ошибка: обнаружена рекурсия! Скрипт " + scriptFileName + " вызывает сам себя");
+            return;
+        }
+        
         System.out.println("\nВЫПОЛНЕНИЕ СКРИПТА: " + scriptFileName);
+        
+        activeScripts.add(absolutePath);
         
         try (Scanner fileScanner = new Scanner(scriptFile)) {
             InputReader scriptReader = new InputReader(fileScanner, false);
@@ -312,6 +329,8 @@ public class App {
             
         } catch (FileNotFoundException e) {
             System.out.println("Файл скрипта не найден: " + scriptFileName);
+        } finally {
+            activeScripts.remove(absolutePath);
         }
     }
 

@@ -67,7 +67,7 @@ public class Ticket implements Comparable<Ticket> {
 
     @Override
     public int compareTo(Ticket other) {
-        return Long.compare(this.id, other.id);
+        return this.name.compareTo(other.name);
     }
 
     @Override
