@@ -1,3 +1,11 @@
 help
 info
-show
+add
+1
+5.999
+4.0
+4
+dsfsd
+VIP
+n
+execute_script src/scripts/scr1.txt

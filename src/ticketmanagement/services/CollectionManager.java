@@ -1,29 +1,44 @@
-package ticketmanagement;
+package ticketmanagement.services;
+
+import ticketmanagement.models.Coordinates;
+import ticketmanagement.models.Person;
+import ticketmanagement.models.Ticket;
+import ticketmanagement.models.TicketType;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * Класс для управления коллекцией билетов.
- * Хранит коллекцию в java.util.Vector, обеспечивает основные операции.
- * 
- * @author AS
- * @version 1.1
+ * Центральная работа с коллекцией {@link Vector}.
  */
-
 public class CollectionManager {
-    private Vector<Ticket> collection;
-    private LocalDateTime initDate;
-    private String fileName;
+    private final Vector<Ticket> collection = new Vector<>();
+    private final LocalDateTime initDate = LocalDateTime.now();
+    private final String fileName;
+    private final FileManager fileManager;
+    private final IdGenerator idGenerator;
 
-    public CollectionManager(String fileName) {
-        this.collection = new Vector<>();
-        this.initDate = LocalDateTime.now();
+    public CollectionManager(String fileName, FileManager fileManager, IdGenerator idGenerator) {
         this.fileName = fileName;
+        this.fileManager = fileManager;
+        this.idGenerator = idGenerator;
     }
 
-    public Vector<Ticket> getCollection() { return collection; }
-    public LocalDateTime getInitDate() { return initDate; }
+    public Vector<Ticket> getCollection() {
+        return collection;
+    }
+
+    public LocalDateTime getInitDate() {
+        return initDate;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public IdGenerator getIdGenerator() {
+        return idGenerator;
+    }
 
     public String getInfo() {
         return String.format("Тип коллекции: %s\nДата инициализации: %s\nКоличество элементов: %d",
@@ -31,20 +46,22 @@ public class CollectionManager {
     }
 
     public String show() {
-    if (collection.isEmpty()) return "Коллекция пуста";
-    StringBuilder sb = new StringBuilder();
-    sb.append("\n");
-    for (Ticket t : collection) {
-        sb.append(t.toString());
+        if (collection.isEmpty()) {
+            return "Коллекция пуста";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n");
+        for (Ticket t : collection) {
+            sb.append(t.toString());
+        }
+        return sb.toString();
     }
-    return sb.toString();
-}
 
     public void add(Ticket ticket) {
         collection.add(ticket);
     }
 
-        public boolean updateFieldById(Long id, String fieldName, Object value) {
+    public boolean updateFieldById(Long id, String fieldName, Object value) {
         for (int i = 0; i < collection.size(); i++) {
             if (collection.get(i).getId().equals(id)) {
                 Ticket ticket = collection.get(i);
@@ -56,7 +73,7 @@ public class CollectionManager {
                         ticket.setCoordinates((Coordinates) value);
                         break;
                     case "price":
-                        ticket.setPrice((int) value);
+                        ticket.setPrice((Integer) value);
                         break;
                     case "comment":
                         ticket.setComment((String) value);
@@ -98,7 +115,6 @@ public class CollectionManager {
             collection.add(ticket);
             return true;
         }
-        
         Ticket maxTicket = Collections.max(collection);
         if (ticket.compareTo(maxTicket) > 0) {
             collection.add(ticket);
@@ -112,7 +128,9 @@ public class CollectionManager {
     }
 
     public Ticket maxByCoordinates() {
-        if (collection.isEmpty()) return null;
+        if (collection.isEmpty()) {
+            return null;
+        }
         return Collections.max(collection, (t1, t2) -> t1.compareCoordinates(t2));
     }
 
@@ -134,14 +152,15 @@ public class CollectionManager {
     }
 
     public void loadFromFile() throws Exception {
-        FileManager fileManager = new FileManager();
         List<Ticket> loaded = fileManager.loadFromFile(fileName);
         collection.clear();
         collection.addAll(loaded);
+        for (Ticket t : collection) {
+            idGenerator.notifyMaxExistingId(t.getId());
+        }
     }
 
     public void saveToFile() throws Exception {
-        FileManager fileManager = new FileManager();
         fileManager.saveToFile(fileName, collection);
     }
 }

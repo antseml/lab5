@@ -1,24 +1,24 @@
-package ticketmanagement;
+package ticketmanagement.models;
 
 /**
- * Класс, представляющий координаты на плоскости.
- * Содержит координаты x (Double, не null) и y (long).
- * 
- * @author AS
- * @version 1.1
+ * Координаты: x не null, y — long.
  */
-
 public class Coordinates {
-    private Double x;
-    private long y;
+    private final Double x;
+    private final long y;
 
     public Coordinates(Double x, long y) {
         this.x = x;
         this.y = y;
     }
 
-    public Double getX() { return x; }
-    public long getY() { return y; }
+    public Double getX() {
+        return x;
+    }
+
+    public long getY() {
+        return y;
+    }
 
     @Override
     public String toString() {

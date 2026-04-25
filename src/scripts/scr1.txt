@@ -1,1 +1,15 @@
+add
+1
+5.999
+4.0
+
+
+
+gofpiu
+4
+dsfsd
+VIP
+n
 execute_script src/scripts/scr2.txt
+
+help
