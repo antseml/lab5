@@ -90,7 +90,7 @@ public class Ticket implements Comparable<Ticket> {
             sb.append(String.format("Цвет волос:   %s\n", person.getHairColor()));
             sb.append(String.format("Национальность: %s\n", person.getNationality()));
         } else {
-            sb.append("Человек:        не указан\n");
+            sb.append("Человек:       не указан\n\n");
         }
         
         return sb.toString();
