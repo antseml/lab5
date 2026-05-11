@@ -1,6 +1,7 @@
-package ticketmanagement.commands;
+package ticketmanagement.util;
 
 import ticketmanagement.ApplicationContext;
+import ticketmanagement.interfaces.Command;
 
 import java.util.Arrays;
 import java.util.Collection;

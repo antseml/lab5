@@ -1,22 +1,24 @@
 package ticketmanagement.models;
 
+import java.util.Objects;
+
 /**
- * Координаты: x не null, y — long.
+ * Координаты: x не null (Float), y не null (Double).
  */
 public class Coordinates {
-    private final Double x;
-    private final long y;
+    private final Float x;
+    private final Double y;
 
-    public Coordinates(Double x, long y) {
-        this.x = x;
-        this.y = y;
+    public Coordinates(Float x, Double y) {
+        this.x = Objects.requireNonNull(x, "x");
+        this.y = Objects.requireNonNull(y, "y");
     }
 
-    public Double getX() {
+    public Float getX() {
         return x;
     }
 
-    public long getY() {
+    public Double getY() {
         return y;
     }
 
@@ -26,6 +28,10 @@ public class Coordinates {
         if (xStr.endsWith(".0")) {
             xStr = xStr.substring(0, xStr.length() - 2);
         }
-        return "(" + xStr + ", " + y + ")";
+        String yStr = y.toString();
+        if (yStr.endsWith(".0")) {
+            yStr = yStr.substring(0, yStr.length() - 2);
+        }
+        return "(" + xStr + ", " + yStr + ")";
     }
 }

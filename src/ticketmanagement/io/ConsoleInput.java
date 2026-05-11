@@ -165,6 +165,40 @@ public class ConsoleInput {
         }
     }
 
+    /**
+     * Читает положительное число с плавающей точкой ({@code > 0}).
+     *
+     * @param fieldName имя поля для подсказки
+     * @return введённое значение
+     */
+    public double readPositiveDouble(String fieldName) {
+        String prompt = "Введите " + fieldName + " (число > 0): ";
+        while (true) {
+            try {
+                String input = readLine(interactive ? prompt : "");
+                if (input.isEmpty()) {
+                    if (interactive) {
+                        System.out.println("Поле обязательно. Повторите ввод.");
+                    }
+                    continue;
+                }
+                input = input.replace(',', '.');
+                double value = Double.parseDouble(input);
+                if (value <= 0) {
+                    if (interactive) {
+                        System.out.println("Значение должно быть больше 0.");
+                    }
+                    continue;
+                }
+                return value;
+            } catch (NumberFormatException e) {
+                if (interactive) {
+                    System.out.println("Некорректное число. Повторите ввод.");
+                }
+            }
+        }
+    }
+
     public <T extends Enum<T>> T readEnum(String fieldName, Class<T> enumClass) {
         T[] constants = enumClass.getEnumConstants();
         while (true) {
@@ -191,7 +225,7 @@ public class ConsoleInput {
                     return constants[choice - 1];
                 }
             } catch (NumberFormatException ignored) {
-                // try name
+                
             }
             try {
                 return Enum.valueOf(enumClass, input.toUpperCase());

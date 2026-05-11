@@ -6,7 +6,7 @@ import ticketmanagement.models.Ticket;
 import ticketmanagement.models.TicketType;
 import ticketmanagement.services.IdGenerator;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * Сборка нового билета: id и дата создаются автоматически.
@@ -31,12 +31,12 @@ public class TicketReader {
         }
         String name = input.readNonEmptyLine("Введите название билета (name): ");
         Coordinates coordinates = coordinatesReader.read();
-        int price = input.readInt("цену (price, целое > 0)", true);
+        float price = input.readPositiveFloat("цену (price, > 0)");
         String comment = input.readNonEmptyLine("Введите комментарий (comment, не пустой): ");
         TicketType type = input.readEnum("тип билета (type)", TicketType.class);
         Person person = personReader.readNullable();
 
         long id = idGenerator.nextId();
-        return new Ticket(id, name, coordinates, LocalDate.now(), price, comment, type, person);
+        return new Ticket(id, name, coordinates, new Date(), price, comment, type, person);
     }
 }

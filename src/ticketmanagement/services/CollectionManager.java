@@ -73,7 +73,7 @@ public class CollectionManager {
                         ticket.setCoordinates((Coordinates) value);
                         break;
                     case "price":
-                        ticket.setPrice((Integer) value);
+                        ticket.setPrice((Float) value);
                         break;
                     case "comment":
                         ticket.setComment((String) value);
@@ -134,16 +134,16 @@ public class CollectionManager {
         return Collections.max(collection, (t1, t2) -> t1.compareCoordinates(t2));
     }
 
-    public Set<Integer> getUniquePrices() {
-        Set<Integer> prices = new HashSet<>();
+    public Set<Float> getUniquePrices() {
+        Set<Float> prices = new HashSet<>();
         for (Ticket t : collection) {
             prices.add(t.getPrice());
         }
         return prices;
     }
 
-    public List<Integer> getPricesDescending() {
-        List<Integer> prices = new ArrayList<>();
+    public List<Float> getPricesDescending() {
+        List<Float> prices = new ArrayList<>();
         for (Ticket t : collection) {
             prices.add(t.getPrice());
         }

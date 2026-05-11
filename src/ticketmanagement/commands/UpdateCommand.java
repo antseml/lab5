@@ -1,6 +1,7 @@
 package ticketmanagement.commands;
 
 import ticketmanagement.ApplicationContext;
+import ticketmanagement.interfaces.Command;
 import ticketmanagement.models.Coordinates;
 import ticketmanagement.models.Person;
 import ticketmanagement.models.Ticket;
@@ -55,7 +56,7 @@ public class UpdateCommand implements Command {
                     System.out.println("Координаты обновлены");
                     break;
                 case 3:
-                    int price = ctx.consoleInput().readInt("новую цену (price > 0)", true);
+                    float price = ctx.consoleInput().readPositiveFloat("новую цену (price > 0)");
                     ctx.collectionManager().updateFieldById(id, "price", price);
                     System.out.println("Цена обновлена");
                     break;

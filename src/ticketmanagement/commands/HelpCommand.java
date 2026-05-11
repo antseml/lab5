@@ -1,5 +1,8 @@
 package ticketmanagement.commands;
 
+import ticketmanagement.interfaces.Command;
+import ticketmanagement.util.CommandInvoker;
+
 /**
  * Справка по зарегистрированным командам.
  */

@@ -5,7 +5,7 @@ package ticketmanagement.models;
  */
 public enum EyeColor {
     GREEN,
-    RED,
     BLUE,
-    WHITE
+    YELLOW,
+    BROWN
 }

@@ -1,6 +1,7 @@
 package ticketmanagement.commands;
 
 import ticketmanagement.ApplicationContext;
+import ticketmanagement.interfaces.Command;
 
 import java.util.Set;
 
@@ -23,12 +24,12 @@ public class PrintUniquePriceCommand implements Command {
 
     @Override
     public void execute(String[] args) {
-        Set<Integer> unique = ctx.collectionManager().getUniquePrices();
+        Set<Float> unique = ctx.collectionManager().getUniquePrices();
         if (unique.isEmpty()) {
             System.out.println("Коллекция пуста");
         } else {
             System.out.println("\nУНИКАЛЬНЫЕ ЦЕНЫ:");
-            unique.stream().sorted().forEach(p -> System.out.println("  • " + p));
+            unique.stream().sorted().forEach(p -> System.out.println("  • " + Float.toString(p)));
             System.out.println("Всего: " + unique.size());
         }
     }

@@ -1,6 +1,7 @@
 package ticketmanagement.commands;
 
 import ticketmanagement.ApplicationContext;
+import ticketmanagement.interfaces.Command;
 
 public class ShowCommand implements Command {
     private final ApplicationContext ctx;

@@ -1,7 +1,7 @@
 package ticketmanagement.exceptions;
 
 /**
- * Ошибка предметной области (расширяйте по необходимости).
+ * Ошибка предметной области.
  */
 public class DomainException extends RuntimeException {
     public DomainException(String message) {

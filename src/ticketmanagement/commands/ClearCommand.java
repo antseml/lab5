@@ -1,6 +1,7 @@
 package ticketmanagement.commands;
 
 import ticketmanagement.ApplicationContext;
+import ticketmanagement.interfaces.Command;
 
 public class ClearCommand implements Command {
     private final ApplicationContext ctx;

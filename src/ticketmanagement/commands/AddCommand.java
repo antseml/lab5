@@ -1,6 +1,7 @@
 package ticketmanagement.commands;
 
 import ticketmanagement.ApplicationContext;
+import ticketmanagement.interfaces.Command;
 import ticketmanagement.models.Ticket;
 
 public class AddCommand implements Command {

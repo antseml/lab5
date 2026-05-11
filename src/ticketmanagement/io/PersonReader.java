@@ -14,26 +14,22 @@ public class PersonReader {
     public PersonReader(ConsoleInput input) {
         this.input = input;
     }
-
-    /**
-     * @return {@code null}, если пользователь ввёл пустую строку на вопрос о наличии человека.
-     */
     public Person readNullable() {
         if (input.isInteractive()) {
-            System.out.print("Человек у билета? Введите y если да, иначе пустая строка для null: ");
+            System.out.print("Есть информация о человеке?Введите 'y' если да, по дефолту - 'n': ");
         }
         String first = input.readLine("");
         if (first.isEmpty()) {
             return null;
         }
-        if (!first.equalsIgnoreCase("y") && !first.equalsIgnoreCase("yes") && !first.equalsIgnoreCase("д")) {
+        if (!first.equalsIgnoreCase("y") && !first.equalsIgnoreCase("yes")) {
             return null;
         }
 
         if (input.isInteractive()) {
             System.out.println("Ввод данных человека:");
         }
-        float height = input.readPositiveFloat("рост (float, > 0)");
+        double height = input.readPositiveDouble("рост (double, > 0)");
         EyeColor eye = input.readEnum("цвет глаз", EyeColor.class);
         HairColor hair = input.readEnum("цвет волос", HairColor.class);
         Country country = input.readEnum("национальность", Country.class);

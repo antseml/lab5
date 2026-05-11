@@ -13,11 +13,8 @@ public class CoordinatesReader {
     }
 
     public Coordinates read() {
-        if (input.isInteractive()) {
-            System.out.println("Ввод координат:");
-        }
-        Double x = input.readDoubleNonNull("координата X (Double, не null)");
-        long y = input.readLong("координата Y (long)", false);
+        Float x = input.readPositiveFloat("координата X (Float, > 0)");
+        Double y = input.readDoubleNonNull("координата Y (Double, не null)");
         return new Coordinates(x, y);
     }
 }

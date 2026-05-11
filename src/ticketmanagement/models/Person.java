@@ -4,19 +4,19 @@ package ticketmanagement.models;
  * Человек (опционально у билета).
  */
 public class Person {
-    private final float height;
+    private final double height;
     private final EyeColor eyeColor;
     private final HairColor hairColor;
     private final Country nationality;
 
-    public Person(float height, EyeColor eyeColor, HairColor hairColor, Country nationality) {
+    public Person(double height, EyeColor eyeColor, HairColor hairColor, Country nationality) {
         this.height = height;
         this.eyeColor = eyeColor;
         this.hairColor = hairColor;
         this.nationality = nationality;
     }
 
-    public float getHeight() {
+    public double getHeight() {
         return height;
     }
 

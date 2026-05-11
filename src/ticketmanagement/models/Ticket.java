@@ -1,7 +1,9 @@
 package ticketmanagement.models;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Objects;
 
 /**
  * Билет в коллекции. Сортировка по умолчанию — по имени (как раньше).
@@ -10,18 +12,18 @@ public class Ticket implements Comparable<Ticket> {
     private final Long id;
     private String name;
     private Coordinates coordinates;
-    private final LocalDate creationDate;
-    private int price;
+    private final Date creationDate;
+    private float price;
     private String comment;
     private TicketType type;
     private Person person;
 
-    public Ticket(Long id, String name, Coordinates coordinates, LocalDate creationDate,
-                  int price, String comment, TicketType type, Person person) {
+    public Ticket(Long id, String name, Coordinates coordinates, Date creationDate,
+                  float price, String comment, TicketType type, Person person) {
         this.id = id;
         this.name = name;
         this.coordinates = coordinates;
-        this.creationDate = creationDate;
+        this.creationDate = Objects.requireNonNull(creationDate, "creationDate");
         this.price = price;
         this.comment = comment;
         this.type = type;
@@ -48,15 +50,15 @@ public class Ticket implements Comparable<Ticket> {
         this.coordinates = coordinates;
     }
 
-    public LocalDate getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 
@@ -97,13 +99,13 @@ public class Ticket implements Comparable<Ticket> {
 
     @Override
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("БИЛЕТ #%d\n", id));
         sb.append(String.format("Название:      %s\n", name));
         sb.append(String.format("Координаты:    %s\n", coordinates));
-        sb.append(String.format("Дата создания: %s\n", creationDate.format(formatter)));
-        sb.append(String.format("Цена:          %d\n", price));
+        sb.append(String.format("Дата создания: %s\n", formatter.format(creationDate)));
+        sb.append(String.format("Цена:          %s\n", Float.toString(price)));
         sb.append(String.format("Комментарий:   %s\n", comment));
         sb.append(String.format("Тип билета:    %s\n", type));
         if (person != null) {

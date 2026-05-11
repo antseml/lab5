@@ -3,8 +3,10 @@ package ticketmanagement.services;
 import ticketmanagement.models.*;
 
 import java.io.*;
-import java.time.LocalDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Vector;
@@ -51,6 +53,7 @@ public class FileManager {
     }
 
     public void saveToFile(String fileName, Vector<Ticket> tickets) throws Exception {
+        SimpleDateFormat dateOut = new SimpleDateFormat("yyyy-MM-dd");
         StringBuilder json = new StringBuilder("[\n");
 
         for (int i = 0; i < tickets.size(); i++) {
@@ -62,7 +65,7 @@ public class FileManager {
             json.append("\"x\":").append(t.getCoordinates().getX()).append(",");
             json.append("\"y\":").append(t.getCoordinates().getY());
             json.append("},");
-            json.append("\"creationDate\":\"").append(t.getCreationDate()).append("\",");
+            json.append("\"creationDate\":\"").append(dateOut.format(t.getCreationDate())).append("\",");
             json.append("\"price\":").append(t.getPrice()).append(",");
             json.append("\"comment\":\"").append(escapeJson(t.getComment())).append("\",");
             json.append("\"type\":\"").append(t.getType()).append("\"");
@@ -100,6 +103,42 @@ public class FileManager {
         return s.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 
+    /**
+     * Делит внутренность JSON-объекта по запятым только на верхнем уровне
+     * (запятые внутри вложенных {@code {...}} или {@code [...]} не являются разделителями полей).
+     */
+    private static String[] splitAtTopLevelCommas(String objectInner) {
+        List<String> parts = new ArrayList<>();
+        int start = 0;
+        int depth = 0;
+        boolean inString = false;
+        for (int i = 0; i < objectInner.length(); i++) {
+            char c = objectInner.charAt(i);
+            if (inString && c == '\\' && i + 1 < objectInner.length()) {
+                i++;
+                continue;
+            }
+            if (c == '"') {
+                inString = !inString;
+                continue;
+            }
+            if (!inString) {
+                if (c == '{' || c == '[') {
+                    depth++;
+                } else if (c == '}' || c == ']') {
+                    depth--;
+                } else if (c == ',' && depth == 0) {
+                    parts.add(objectInner.substring(start, i).trim());
+                    start = i + 1;
+                }
+            }
+        }
+        if (start < objectInner.length()) {
+            parts.add(objectInner.substring(start).trim());
+        }
+        return parts.toArray(new String[0]);
+    }
+
     private String[] splitJsonObjects(String json) {
         List<String> objects = new ArrayList<>();
         int depth = 0;
@@ -132,10 +171,10 @@ public class FileManager {
 
             Long id = null;
             String name = null;
-            Double x = null;
-            long y = 0;
-            LocalDate creationDate = null;
-            int price = 0;
+            Float x = null;
+            Double y = null;
+            Date creationDate = null;
+            float price = 0;
             String comment = null;
             TicketType type = null;
             Person person = null;
@@ -147,7 +186,10 @@ public class FileManager {
                 json = json.substring(0, json.length() - 1);
             }
 
-            String[] fields = json.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+            String[] fields = splitAtTopLevelCommas(json);
+
+            SimpleDateFormat dateIn = new SimpleDateFormat("yyyy-MM-dd");
+            dateIn.setLenient(false);
 
             for (String field : fields) {
                 String[] keyValue = field.split(":", 2);
@@ -177,18 +219,22 @@ public class FileManager {
                                 String ckey = ckv[0].trim().replace("\"", "");
                                 String cvalue = ckv[1].trim();
                                 if (ckey.equals("x")) {
-                                    x = Double.parseDouble(cvalue);
+                                    x = Float.parseFloat(cvalue);
                                 } else if (ckey.equals("y")) {
-                                    y = Long.parseLong(cvalue);
+                                    y = Double.parseDouble(cvalue);
                                 }
                             }
                         }
                         break;
                     case "creationDate":
-                        creationDate = LocalDate.parse(value.replace("\"", ""));
+                        try {
+                            creationDate = dateIn.parse(value.replace("\"", ""));
+                        } catch (ParseException e) {
+                            creationDate = null;
+                        }
                         break;
                     case "price":
-                        price = Integer.parseInt(value);
+                        price = Float.parseFloat(value);
                         break;
                     case "comment":
                         comment = value.replace("\"", "");
@@ -206,7 +252,7 @@ public class FileManager {
                 }
             }
 
-            if (id != null && name != null && x != null && creationDate != null && price > 0 && comment != null && type != null) {
+            if (id != null && name != null && x != null && y != null && creationDate != null && price > 0 && comment != null && type != null) {
                 Coordinates coordinates = new Coordinates(x, y);
                 return new Ticket(id, name, coordinates, creationDate, price, comment, type, person);
             }
@@ -226,7 +272,7 @@ public class FileManager {
                 personStr = personStr.substring(0, personStr.length() - 1);
             }
 
-            float height = 0;
+            double height = 0;
             EyeColor eyeColor = null;
             HairColor hairColor = null;
             Country nationality = null;
@@ -241,7 +287,7 @@ public class FileManager {
                 String v = kv[1].trim().replace("\"", "");
                 switch (k) {
                     case "height":
-                        height = Float.parseFloat(v);
+                        height = Double.parseDouble(v);
                         break;
                     case "eyeColor":
                         eyeColor = parseEyeColor(v);
@@ -257,7 +303,7 @@ public class FileManager {
                 }
             }
 
-            if (eyeColor == null || hairColor == null || nationality == null) {
+            if (eyeColor == null || hairColor == null || nationality == null || height <= 0) {
                 return null;
             }
             return new Person(height, eyeColor, hairColor, nationality);
@@ -286,19 +332,19 @@ public class FileManager {
     private static EyeColor legacyToEyeColor(String old) {
         switch (old) {
             case "YELLOW":
-                return EyeColor.GREEN;
+                return EyeColor.YELLOW;
             case "BROWN":
-                return EyeColor.RED;
+                return EyeColor.BROWN;
             case "BLACK":
                 return EyeColor.BLUE;
             case "GREEN":
                 return EyeColor.GREEN;
             case "RED":
-                return EyeColor.RED;
+                return EyeColor.YELLOW;
             case "BLUE":
                 return EyeColor.BLUE;
             case "WHITE":
-                return EyeColor.WHITE;
+                return EyeColor.BROWN;
             default:
                 return EyeColor.BLUE;
         }
